@@ -1,25 +1,25 @@
 import { Button } from "@/components/ui/button";
-import type { SubjectProgress } from "../../backend.d";
-import { Subject } from "../../backend.d";
+import { Subject } from "../../types/local";
+import type { SubjectProgress } from "../../types/local";
 
 const SUBJECT_META: Record<
   Subject,
   { label: string; icon: string; color: string }
 > = {
   [Subject.history]: {
-    label: "Indian History",
-    icon: "📜",
-    color: "oklch(0.85 0.05 50)",
+    label: "Legal Aptitude",
+    icon: "⚖️",
+    color: "oklch(0.85 0.06 243)",
   },
   [Subject.geography]: {
-    label: "Geography",
-    icon: "🌍",
+    label: "General Knowledge & Current Affairs",
+    icon: "🌐",
     color: "oklch(0.88 0.07 155)",
   },
   [Subject.polity]: {
-    label: "Indian Polity",
-    icon: "⚖️",
-    color: "oklch(0.85 0.06 243)",
+    label: "Mental Ability",
+    icon: "🧠",
+    color: "oklch(0.87 0.05 300)",
   },
   [Subject.economy]: {
     label: "Indian Economy",

@@ -1,27 +1,62 @@
 import { Button } from "@/components/ui/button";
 import {
-  BarChart2,
+  BookMarked,
   BookOpen,
-  Clock,
+  Brain,
   FileText,
-  MapPin,
-  Trophy,
+  Globe,
+  UserCircle,
 } from "lucide-react";
+import type { ActivePage } from "../../App";
 
 const QUICK_NAV_ITEMS = [
-  { label: "NCERT Books", icon: BookOpen, filled: true },
-  { label: "Previous Papers", icon: FileText, filled: false },
-  { label: "Performance", icon: BarChart2, filled: false },
-  { label: "Current Affairs", icon: Clock, filled: false },
-  { label: "Mind Maps", icon: MapPin, filled: false },
-  { label: "Leaderboard", icon: Trophy, filled: false },
+  {
+    label: "Legal Aptitude",
+    icon: BookOpen,
+    filled: true,
+    page: "Daily Practice" as ActivePage,
+  },
+  {
+    label: "Mock Tests",
+    icon: FileText,
+    filled: false,
+    page: "Mock Tests" as ActivePage,
+  },
+  {
+    label: "GK & Current Affairs",
+    icon: Globe,
+    filled: false,
+    page: "Daily Practice" as ActivePage,
+  },
+  {
+    label: "Mental Ability",
+    icon: Brain,
+    filled: false,
+    page: "Daily Practice" as ActivePage,
+  },
+  {
+    label: "Syllabus Tracker",
+    icon: BookMarked,
+    filled: false,
+    page: "Syllabus Tracker" as ActivePage,
+  },
+  {
+    label: "Profile",
+    icon: UserCircle,
+    filled: false,
+    page: "Profile" as ActivePage,
+  },
 ];
 
-export function QuickNav() {
+interface QuickNavProps {
+  setActivePage: (page: ActivePage) => void;
+}
+
+export function QuickNav({ setActivePage }: QuickNavProps) {
   return (
     <div
       data-ocid="quick_nav.section"
-      className="bg-white rounded-xl border border-border shadow-card p-5"
+      className="bg-white rounded-2xl border border-gray-100 shadow-card p-5"
     >
       <h2 className="text-sm font-semibold text-foreground mb-4">
         Quick Navigation
@@ -33,6 +68,7 @@ export function QuickNav() {
             data-ocid={`quick_nav.item.${i + 1}`}
             size="sm"
             variant={item.filled ? "default" : "outline"}
+            onClick={() => setActivePage(item.page)}
             className="h-8 px-3 text-xs rounded-full gap-1.5"
             style={
               item.filled

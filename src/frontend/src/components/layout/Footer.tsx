@@ -1,5 +1,3 @@
-const QUICK_LINKS = ["About", "Contact", "Privacy", "Terms", "Resources"];
-
 export function Footer() {
   const year = new Date().getFullYear();
   const hostname = encodeURIComponent(window.location.hostname);
@@ -11,64 +9,20 @@ export function Footer() {
           <div>
             <div className="flex items-center gap-2 mb-2">
               <div
-                className="w-6 h-6 rounded-md flex items-center justify-center"
+                className="w-6 h-6 rounded-md flex items-center justify-center text-sm"
                 style={{ background: "oklch(var(--navy))" }}
               >
-                <svg
-                  width="12"
-                  height="12"
-                  viewBox="0 0 12 12"
-                  fill="none"
-                  aria-label="PrepSage logo"
-                  role="img"
-                >
-                  <rect
-                    x="0.5"
-                    y="0.5"
-                    width="4.5"
-                    height="4.5"
-                    rx="0.75"
-                    fill="white"
-                    opacity="0.95"
-                  />
-                  <rect
-                    x="7"
-                    y="0.5"
-                    width="4.5"
-                    height="4.5"
-                    rx="0.75"
-                    fill="white"
-                    opacity="0.6"
-                  />
-                  <rect
-                    x="0.5"
-                    y="7"
-                    width="4.5"
-                    height="4.5"
-                    rx="0.75"
-                    fill="white"
-                    opacity="0.6"
-                  />
-                  <rect
-                    x="7"
-                    y="7"
-                    width="4.5"
-                    height="4.5"
-                    rx="0.75"
-                    fill="white"
-                    opacity="0.3"
-                  />
-                </svg>
+                ⚖️
               </div>
               <span
                 className="font-bold text-sm"
                 style={{ color: "oklch(var(--navy))" }}
               >
-                PrepSage
+                TS LAWCET
               </span>
             </div>
             <p className="text-xs text-muted-foreground">
-              Your intelligent UPSC preparation companion.
+              Your intelligent TS LAWCET preparation companion.
             </p>
           </div>
 
@@ -77,7 +31,7 @@ export function Footer() {
               Quick Links
             </p>
             <ul className="flex flex-wrap gap-x-4 gap-y-1">
-              {QUICK_LINKS.map((link) => (
+              {["About", "Contact", "Privacy", "Terms"].map((link) => (
                 <li key={link}>
                   <button
                     type="button"

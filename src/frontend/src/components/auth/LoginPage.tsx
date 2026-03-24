@@ -1,192 +1,287 @@
 import { Button } from "@/components/ui/button";
-import { Fingerprint, Loader2, ShieldCheck, Smartphone } from "lucide-react";
-import { motion } from "motion/react";
-import { useInternetIdentity } from "../../hooks/useInternetIdentity";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { CheckCircle2, Loader2 } from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
+import type { Variants } from "motion/react";
+import { useState } from "react";
+import { useAuth } from "../../contexts/AuthContext";
 
-export function LoginPage() {
-  const { login, isLoggingIn, isLoginError, loginError } =
-    useInternetIdentity();
+interface LoginPageProps {
+  onSwitchToSignup: () => void;
+}
+
+const features = [
+  "120-question full-length mock tests",
+  "Smart hierarchical syllabus tracker",
+  "Daily practice & weak area review",
+];
+
+const fieldVariants: Variants = {
+  hidden: { opacity: 0, y: 8 },
+  visible: (i: number) => ({
+    opacity: 1,
+    y: 0,
+    transition: {
+      delay: 0.15 + i * 0.07,
+      duration: 0.35,
+      ease: [0, 0, 0.2, 1] as [number, number, number, number],
+    },
+  }),
+};
+
+export function LoginPage({ onSwitchToSignup }: LoginPageProps) {
+  const { login } = useAuth();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+    if (!email || !password) {
+      setError("Please fill in all fields.");
+      return;
+    }
+    setLoading(true);
+    const result = await login(email, password);
+    setLoading(false);
+    if (!result.success) setError(result.error ?? "Login failed.");
+  };
 
   return (
-    <div
-      className="min-h-screen flex items-center justify-center px-4 py-12"
-      style={{
-        background:
-          "linear-gradient(135deg, oklch(0.22 0.068 243) 0%, oklch(0.18 0.06 243) 100%)",
-      }}
-    >
-      <div
-        className="absolute inset-0 opacity-5"
-        aria-hidden="true"
-        style={{
-          backgroundImage:
-            "radial-gradient(circle at 25% 25%, white 1px, transparent 1px), radial-gradient(circle at 75% 75%, white 1px, transparent 1px)",
-          backgroundSize: "48px 48px",
-        }}
-      />
-
+    <div className="min-h-screen flex" style={{ background: "#F0F4F8" }}>
+      {/* Left branding panel — desktop only */}
       <motion.div
-        initial={{ opacity: 0, y: 24 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, ease: "easeOut" }}
-        className="relative w-full max-w-md"
+        initial={{ opacity: 0, x: -24 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.5, ease: [0, 0, 0.2, 1] }}
+        className="hidden md:flex w-[45%] lg:w-[42%] flex-col items-center justify-center px-12 py-16 relative overflow-hidden"
+        style={{ background: "#0F3554" }}
       >
-        <div className="bg-white rounded-2xl shadow-2xl p-8 sm:p-10">
-          {/* Brand */}
-          <div className="flex items-center gap-3 mb-8">
+        {/* Subtle background circles */}
+        <div
+          className="absolute top-[-80px] right-[-80px] w-72 h-72 rounded-full opacity-10"
+          style={{ background: "white" }}
+        />
+        <div
+          className="absolute bottom-[-60px] left-[-60px] w-56 h-56 rounded-full opacity-[0.07]"
+          style={{ background: "white" }}
+        />
+
+        <div className="relative z-10 max-w-xs text-center">
+          {/* Logo */}
+          <div className="flex justify-center mb-6">
             <div
-              className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
-              style={{ background: "oklch(var(--navy))" }}
+              className="w-16 h-16 rounded-2xl flex items-center justify-center text-3xl shadow-lg"
+              style={{
+                background: "rgba(255,255,255,0.15)",
+                backdropFilter: "blur(4px)",
+              }}
             >
-              <svg
-                width="22"
-                height="22"
-                viewBox="0 0 22 22"
-                fill="none"
-                aria-label="PrepSage logo"
-                role="img"
-              >
-                <rect
-                  x="1"
-                  y="1"
-                  width="9"
-                  height="9"
-                  rx="1.5"
-                  fill="white"
-                  opacity="0.95"
+              ⚖️
+            </div>
+          </div>
+
+          <h1 className="text-2xl font-bold text-white mb-1 tracking-tight">
+            TS LAWCET Prep
+          </h1>
+          <p
+            className="text-sm mb-10"
+            style={{ color: "rgba(255,255,255,0.65)" }}
+          >
+            Telangana Law Entrance Preparation
+          </p>
+
+          {/* Feature bullets */}
+          <ul className="space-y-4 text-left">
+            {features.map((feat) => (
+              <li key={feat} className="flex items-start gap-3">
+                <CheckCircle2
+                  size={18}
+                  className="mt-0.5 flex-shrink-0"
+                  style={{ color: "rgba(255,255,255,0.75)" }}
                 />
-                <rect
-                  x="12"
-                  y="1"
-                  width="9"
-                  height="9"
-                  rx="1.5"
-                  fill="white"
-                  opacity="0.6"
-                />
-                <rect
-                  x="1"
-                  y="12"
-                  width="9"
-                  height="9"
-                  rx="1.5"
-                  fill="white"
-                  opacity="0.6"
-                />
-                <rect
-                  x="12"
-                  y="12"
-                  width="9"
-                  height="9"
-                  rx="1.5"
-                  fill="white"
-                  opacity="0.3"
-                />
-              </svg>
+                <span
+                  className="text-sm"
+                  style={{ color: "rgba(255,255,255,0.82)" }}
+                >
+                  {feat}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </motion.div>
+
+      {/* Right form panel */}
+      <motion.div
+        initial={{ opacity: 0, x: 24 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.5, ease: [0, 0, 0.2, 1] }}
+        className="flex-1 flex items-center justify-center px-6 py-12"
+      >
+        <div className="w-full max-w-md">
+          {/* Mobile logo */}
+          <div className="flex md:hidden items-center gap-3 mb-8">
+            <div
+              className="w-10 h-10 rounded-xl flex items-center justify-center text-lg flex-shrink-0"
+              style={{ background: "#0F3554" }}
+            >
+              ⚖️
             </div>
             <div>
               <h1
-                className="text-xl font-bold tracking-tight"
-                style={{ color: "oklch(var(--navy))" }}
+                className="text-lg font-bold tracking-tight"
+                style={{ color: "#0F3554" }}
               >
-                PrepSage
+                TS LAWCET Prep
               </h1>
-              <p className="text-xs text-muted-foreground">
-                UPSC Preparation Platform
+              <p className="text-xs text-gray-500">
+                Telangana Law Entrance Preparation
               </p>
             </div>
           </div>
 
-          <div className="mb-8">
-            <h2 className="text-2xl font-bold text-foreground mb-2">
-              Welcome back
-            </h2>
-            <p className="text-sm text-muted-foreground leading-relaxed">
-              Sign in to continue your UPSC preparation journey. Your progress
-              and targets are waiting.
-            </p>
-          </div>
+          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
+            {/* Heading */}
+            <motion.div
+              custom={0}
+              variants={fieldVariants}
+              initial="hidden"
+              animate="visible"
+              className="mb-7"
+            >
+              <h2 className="text-2xl font-bold text-gray-900 mb-1">
+                Welcome back
+              </h2>
+              <p className="text-sm text-gray-500">
+                Sign in to continue your preparation
+              </p>
+            </motion.div>
 
-          <div className="space-y-3 mb-8">
-            {[
-              {
-                icon: Fingerprint,
-                label: "Biometrics & Passkeys",
-                desc: "Face ID, Touch ID, hardware keys",
-              },
-              {
-                icon: ShieldCheck,
-                label: "Cryptographically secure",
-                desc: "No passwords stored anywhere",
-              },
-              {
-                icon: Smartphone,
-                label: "Works on all devices",
-                desc: "Desktop, mobile, tablet",
-              },
-            ].map(({ icon: Icon, label, desc }) => (
-              <div
-                key={label}
-                className="flex items-center gap-3 p-3 rounded-xl"
-                style={{ background: "oklch(var(--icon-circle))" }}
+            <form
+              onSubmit={handleSubmit}
+              className="space-y-4"
+              data-ocid="login.modal"
+            >
+              <motion.div
+                custom={1}
+                variants={fieldVariants}
+                initial="hidden"
+                animate="visible"
+                className="space-y-1.5"
               >
-                <div
-                  className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
-                  style={{ background: "oklch(var(--navy))" }}
+                <Label
+                  htmlFor="login-email"
+                  className="text-sm font-medium text-gray-700"
                 >
-                  <Icon size={15} className="text-white" />
-                </div>
-                <div>
-                  <p className="text-xs font-semibold text-foreground">
-                    {label}
-                  </p>
-                  <p className="text-xs text-muted-foreground">{desc}</p>
-                </div>
-              </div>
-            ))}
+                  Email
+                </Label>
+                <Input
+                  id="login-email"
+                  data-ocid="login.input"
+                  type="email"
+                  placeholder="you@example.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  autoComplete="email"
+                  className="h-11 rounded-xl border-gray-200 focus:border-[#0F3554] focus:ring-2 focus:ring-[#0F3554]/20"
+                />
+              </motion.div>
+
+              <motion.div
+                custom={2}
+                variants={fieldVariants}
+                initial="hidden"
+                animate="visible"
+                className="space-y-1.5"
+              >
+                <Label
+                  htmlFor="login-password"
+                  className="text-sm font-medium text-gray-700"
+                >
+                  Password
+                </Label>
+                <Input
+                  id="login-password"
+                  data-ocid="login.input"
+                  type="password"
+                  placeholder="Enter your password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  autoComplete="current-password"
+                  className="h-11 rounded-xl border-gray-200 focus:border-[#0F3554] focus:ring-2 focus:ring-[#0F3554]/20"
+                />
+              </motion.div>
+
+              <AnimatePresence>
+                {error && (
+                  <motion.div
+                    key="login-error"
+                    initial={{ opacity: 0, y: -4 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -4 }}
+                    transition={{ duration: 0.2 }}
+                    data-ocid="login.error_state"
+                    className="p-3 rounded-xl bg-red-50 border border-red-100"
+                  >
+                    <p className="text-sm text-red-600">{error}</p>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+              <motion.div
+                custom={3}
+                variants={fieldVariants}
+                initial="hidden"
+                animate="visible"
+              >
+                <motion.div
+                  whileHover={{ scale: 1.01 }}
+                  whileTap={{ scale: 0.99 }}
+                  transition={{ duration: 0.15 }}
+                >
+                  <Button
+                    type="submit"
+                    data-ocid="login.submit_button"
+                    disabled={loading}
+                    className="w-full h-11 rounded-xl font-semibold text-sm text-white transition-all hover:brightness-110"
+                    style={{ background: "#0F3554" }}
+                  >
+                    {loading ? (
+                      <>
+                        <Loader2 size={16} className="mr-2 animate-spin" />
+                        Signing in…
+                      </>
+                    ) : (
+                      "Sign In"
+                    )}
+                  </Button>
+                </motion.div>
+              </motion.div>
+            </form>
+
+            <motion.p
+              custom={4}
+              variants={fieldVariants}
+              initial="hidden"
+              animate="visible"
+              className="mt-6 text-center text-sm text-gray-500"
+            >
+              Don't have an account?{" "}
+              <button
+                type="button"
+                data-ocid="login.link"
+                onClick={onSwitchToSignup}
+                className="font-semibold hover:underline transition-colors"
+                style={{ color: "#0F3554" }}
+              >
+                Sign up
+              </button>
+            </motion.p>
           </div>
-
-          {isLoginError && (
-            <div
-              data-ocid="login.error_state"
-              className="mb-4 p-3 rounded-lg bg-red-50 border border-red-100"
-            >
-              <p className="text-xs text-red-600">
-                {loginError?.message ?? "Login failed. Please try again."}
-              </p>
-            </div>
-          )}
-
-          <Button
-            data-ocid="login.primary_button"
-            onClick={login}
-            disabled={isLoggingIn}
-            className="w-full h-11 font-semibold text-sm rounded-xl"
-            style={{ background: "oklch(var(--navy))", color: "white" }}
-          >
-            {isLoggingIn ? (
-              <>
-                <Loader2 size={16} className="mr-2 animate-spin" />
-                Connecting to Internet Identity…
-              </>
-            ) : (
-              "Sign in with Internet Identity"
-            )}
-          </Button>
-
-          <p className="mt-4 text-center text-xs text-muted-foreground">
-            Powered by{" "}
-            <a
-              href="https://identity.ic0.app"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="underline underline-offset-2"
-              style={{ color: "oklch(var(--navy))" }}
-            >
-              Internet Identity
-            </a>{" "}
-            — a decentralized, password-free authentication system.
-          </p>
         </div>
       </motion.div>
     </div>
